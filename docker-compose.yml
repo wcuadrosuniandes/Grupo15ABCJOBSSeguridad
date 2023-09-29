@@ -1,0 +1,52 @@
+version: "3.9"
+
+services:
+  apigateway:
+    build:
+      context: .
+      dockerfile: api_gateway/Dockerfile
+    environment:
+      AUTHENTICATOR_SERVICE_URL: http://authenticator:5001
+      TOKEN_AUTH_SERVICE_URL: http://token_auth:5002
+      REGISTER_SERVICE_URL: http://register:5003
+    image: apigateway
+    networks:
+      - microservices
+    ports:
+      - 5000:5000
+
+  authenticator:
+    build:
+      context: .
+      dockerfile: authenticator/Dockerfile
+    environment:
+      HOST: token_auth
+      PORT: 5002
+    image: authenticator
+    networks:
+      - microservices
+    ports:
+      - 5001:5001
+
+  token_auth:
+    build:
+      context: .
+      dockerfile: token_auth/Dockerfile
+    image: token_auth
+    networks:
+      - microservices
+    ports:
+      - 5002:5002
+
+  register:
+    build:
+      context: .
+      dockerfile: register/Dockerfile
+    image: register
+    networks:
+      - microservices
+    ports:
+      - 5003:5003
+
+networks:
+  microservices:
