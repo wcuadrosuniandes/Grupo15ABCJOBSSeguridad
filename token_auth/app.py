@@ -33,7 +33,7 @@ if not sistem_contrasena:
     )
     db.session.add(sistem_token)
     db.session.commit()
-cors = CORS(app)
+cors = CORS(app, resources={r"/*": {"origins": "*"}})
 api = Api(app)
 api.add_resource(VistaToken, "/generate")
 api.add_resource(VistaValidateToken, "/validate")
